@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | URL Shortener</title>
+
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+            }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+a {
+    text-decoration: none;
+}
+
+.profile-container {
+    width: min(1200px, 92%);
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.profile-header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.profile-header p {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+.back-btn {
+    padding: 11px 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #374151;
+    background: white;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #f3f4f6;
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 25px;
+}
+
+.left-column,
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.card-header h2 {
+    font-size: 19px;
+    margin-bottom: 5px;
+}
+
+.card-header p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #111827;
+    color: white;
+
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.profile-name h2 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.profile-name p {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 25px 0;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.label {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.edit-btn {
+    display: block;
+    text-align: center;
+
+    margin-top: 25px;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    background: #111827;
+    color: white;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    background: #374151;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    margin-bottom: 7px;
+}
+
+.form-group input {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.primary-btn {
+    display: inline-block;
+
+    border: none;
+
+    padding: 11px 18px;
+
+    background: #111827;
+    color: white;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.primary-btn:hover {
+    background: #374151;
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 18px;
+
+    background: #f9fafb;
+
+    border: 1px solid #eef0f3;
+
+    border-radius: 10px;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    border-radius: 9px;
+
+    font-size: 19px;
+}
+
+.stat-label {
+    display: block;
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+    margin-bottom: 4px;
+}
+
+.stat-card h3 {
+    font-size: 22px;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.view-all {
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.view-all:hover {
+    text-decoration: underline;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 16px 0;
+
+    border-bottom: 1px solid #eef0f3;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f3f4f6;
+
+    border-radius: 8px;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-content h4 {
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+.activity-content p {
+    font-size: 12px;
+
+    color: #6b7280;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.activity-clicks {
+    text-align: right;
+}
+
+.activity-clicks strong {
+    display: block;
+    font-size: 14px;
+}
+
+.activity-clicks span {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 35px 20px;
+}
+
+.empty-icon {
+    font-size: 35px;
+
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    font-size: 17px;
+
+    margin-bottom: 7px;
+}
+
+.empty-state p {
+    font-size: 13px;
+
+    color: #6b7280;
+
+    margin-bottom: 18px;
+}
+
+
+/* =========================
+   DANGER ZONE
+========================= */
+
+.danger-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    border-color: #fecaca;
+}
+
+.danger-card h2 {
+    font-size: 17px;
+
+    margin-bottom: 6px;
+}
+
+.danger-card p {
+    max-width: 550px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color: #6b7280;
+}
+
+.delete-btn {
+    padding: 10px 16px;
+
+    border: 1px solid #dc2626;
+
+    background: white;
+
+    color: #dc2626;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    font-size: 13px;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.verification-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.verification-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f3f4f6;
+    border-radius: 50%;
+
+    font-size: 22px;
+}
+
+.verification-header h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.verification-header p,
+.verification-content p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.verification-content {
+    margin-top: 20px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .left-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .profile-container {
+        width: 94%;
+        padding: 25px 0;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .profile-header h1 {
+        font-size: 26px;
+    }
+
+    .left-column {
+        display: flex;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .danger-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .delete-btn {
+        width: 100%;
+    }
+
+    .activity-content p {
+        max-width: 150px;
+    }
+
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-container">
+
+        <!-- Header -->
+        <header class="profile-header">
+            <div>
+                <h1>My Profile</h1>
+                <p>Manage your account and view your URL shortener activity.</p>
+            </div>
+
+            <a href="/" class="back-btn">
+                ← Back to Dashboard
+            </a>
+        </header>
+
+
+        <main class="profile-grid">
+
+            <!-- LEFT COLUMN -->
+            <section class="left-column">
+
+                <!-- Profile Card -->
+                <div class="card profile-card">
+
+                    <div class="profile-top">
+
+                        <div class="avatar">
+                            <% if (user && user.name) { %>
+                                <%= user.name.charAt(0).toUpperCase() %>
+                            <% } else { %>
+                                U
+                            <% } %>
+                        </div>
+
+                        <div class="profile-name">
+                            <h2>
+                                <%= user?.name || "User" %>
+                            </h2>
+
+                            <p>
+                                <%= user?.email || "user@example.com" %>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="profile-info">
+
+                        <div class="info-item">
+                            <span class="label">Username</span>
+                            <span class="value">
+                                <%= user?.name || "Not set" %>
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">Email</span>
+                            <span class="value">
+                                <%= user?.email || "Not set" %>
+                            </span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="label">Member Since</span>
+                            <span class="value">
+                                <%= user?.createdAt
+                                    ? new Date(user.createdAt).toLocaleDateString()
+                                    : "N/A"
+                                %>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <a href="/profile/edit" class="edit-btn">
+                        Edit Profile
+                    </a>
+
+                </div>
+
+                <!-- Email Verification -->
+<div class="card verification-card">
+
+    <% if (user?.isEmailValid) { %>
+
+        <!-- User's email is already verified -->
+        <div class="verification-header">
+
+            <div class="verification-icon">
+                ✓
+            </div>
+
+            <div>
+                <h2>Email Verified</h2>
+
+                <p>
+                    Your email address has been verified successfully.
+                </p>
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+        <!-- User's email is not verified -->
+        <div class="verification-header">
+
+            <div class="verification-icon">
+                ✉️
+            </div>
+
+            <div>
+                <h2>Verify Your Email</h2>
+
+                <p>
+                    Your email address is not verified yet.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="verification-content">
+
+            <p>
+                Please verify your email to secure your account.
+            </p>
+
+            <form action="/send-verification-email" method="POST">
+
+                <button type="submit" class="primary-btn">
+                    Verify Email
+                </button>
+
+            </form>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+
+                <!-- Change Password -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <div>
+                            <h2>Security</h2>
+                            <p>Keep your account secure.</p>
+                        </div>
+                    </div>
+
+                    <form action="/profile/change-password" method="POST">
+
+                        <div class="form-group">
+                            <label for="currentPassword">
+                                Current Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                name="currentPassword"
+                                placeholder="Enter current password"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="newPassword"
+                                name="newPassword"
+                                placeholder="Enter new password"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm new password"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="primary-btn">
+                            Update Password
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- RIGHT COLUMN -->
+            <section class="right-column">
+
+                <!-- Statistics -->
+                <div class="card">
+
+                    <div class="card-header">
+                        <div>
+                            <h2>Overview</h2>
+                            <p>Your URL shortener statistics.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats">
+
+                        <div class="stat-card">
+                            <div class="stat-icon">🔗</div>
+
+                            <div>
+                                <span class="stat-label">
+                                    Short URLs
+                                </span>
+
+                                <h3>
+                                    <%= stats?.totalUrls || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+
+
+                        <div class="stat-card">
+                            <div class="stat-icon">👆</div>
+
+                            <div>
+                                <span class="stat-label">
+                                    Total Clicks
+                                </span>
+
+                                <h3>
+                                    <%= stats?.totalClicks || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+
+                            <div>
+                                <span class="stat-label">
+                                    Active Links
+                                </span>
+
+                                <h3>
+                                    <%= stats?.activeLinks || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+
+                            <div>
+                                <span class="stat-label">
+                                    This Month
+                                </span>
+
+                                <h3>
+                                    <%= stats?.monthlyUrls || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Activity -->
+                <div class="card activity-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h2>Recent Activity</h2>
+                            <p>Your latest URL activity.</p>
+                        </div>
+
+                        <a href="/urls" class="view-all">
+                            View All
+                        </a>
+                    </div>
+
+
+                    <div class="activity-list">
+
+                        <% if (recentUrls && recentUrls.length > 0) { %>
+
+                            <% recentUrls.forEach(url => { %>
+
+                                <div class="activity-item">
+
+                                    <div class="activity-icon">
+                                        🔗
+                                    </div>
+
+                                    <div class="activity-content">
+
+                                        <h4>
+                                            <%= url.shortUrl || url.shortCode %>
+                                        </h4>
+
+                                        <p>
+                                            <%= url.originalUrl %>
+                                        </p>
+
+                                    </div>
+
+                                    <div class="activity-clicks">
+                                        <strong>
+                                            <%= url.clicks || 0 %>
+                                        </strong>
+
+                                        <span>clicks</span>
+                                    </div>
+
+                                </div>
+
+                            <% }) %>
+
+                        <% } else { %>
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    🔗
+                                </div>
+
+                                <h3>No URLs yet</h3>
+
+                                <p>
+                                    Create your first short URL to see
+                                    your activity here.
+                                </p>
+
+                                <a href="/" class="primary-btn">
+                                    Create Short URL
+                                </a>
+
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Danger Zone -->
+                <div class="card danger-card">
+
+                    <div>
+                        <h2>Delete Account</h2>
+
+                        <p>
+                            Permanently delete your account and all
+                            shortened URLs. This action cannot be undone.
+                        </p>
+                    </div>
+
+                    <form action="/profile/delete" method="POST"
+                          onsubmit="return confirm('Are you sure you want to delete your account?');">
+
+                        <button type="submit" class="delete-btn">
+                            Delete Account
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

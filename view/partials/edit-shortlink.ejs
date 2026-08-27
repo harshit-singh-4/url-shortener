@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/style.css" rel="stylesheet">
+    <title>Update Short Link</title>
+</head>
+<body>
+    <header>
+        <%- include("header")%>
+    </header>
+    
+    <main>
+      <div class="container edit-container">
+        <div class="edit-layout">
+          <section class="edit-intro">
+            <p class="edit-badge">Update Short Link</p>
+            <h1>Refresh Your Short Link</h1>
+            <p class="edit-subtitle">Update the destination or customize the shortcode without changing the rest of your flow.</p>
+            <div class="edit-summary">
+              <div class="summary-item">
+                <span class="summary-label">Current destination</span>
+                <span class="summary-value"><%= messages.url %></span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Current shortcode</span>
+                <span class="summary-value"><%= messages.shortcode %></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="edit-panel">
+            <%- include("flash") %>
+            <form id="shorten-form" action="/update/<%= messages.id %>" method="POST">
+            <div class="form-field">
+                <label for="url">Destination URL</label>
+                <p class="field-hint">Paste the full website address where this short link should redirect.</p>
+                <input type="url" id="url"  name="url" value= "<%= messages.url %>">
+            </div>
+
+            <div class="form-field">
+                <label for="short">Shortcode</label>
+                <p class="field-hint">Pick a clean, memorable code that is easy to share.</p>
+                <input type="text" id="short"  name="shortcode" value= "<%= messages.shortcode %>">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" id="submit">Save Changes</button>
+            </div>
+            </form>
+            <div class="edit-note">
+              <span class="edit-note-title">Best Practice</span>
+              <p>Shortcodes work best when they are short, readable, and closely related to the destination.</p>
+            </div>
+          </section>
+        </div>
+    </div>
+   
+    </main>
+</body>
+</html> 

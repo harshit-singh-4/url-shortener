@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <%- include("header")%>
+    </header>
+    
+    <main>
+      <div class="container home-container">
+        <p class="page-badge">Smart Link Manager</p>
+        <h1>URL SHORTNER </h1>
+        <p class="page-subtitle">Create clean short links and manage them from one simple dashboard.</p>
+        <%- include("flash") %>
+        <form id="shorten-form" action="/" method="POST">
+        <div class="form-field">
+            <label for="url">ENTER URL : </label>
+            <input type="url" id="url" placeholder="Enter url" name="url" required>
+        </div>
+
+        <div class="form-field">
+            <label for="short">SHORT URL : </label>
+            <input type="text" id="short" placeholder="short code" name="shortcode" required>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" id="submit">Submit</button>
+        </div>
+        </form>
+        <div class="list-header">
+          <h2>Shortened Links</h2>
+          <p class="list-subtitle">Open any short link or edit its shortcode.</p>
+        </div>
+        <%# map loop %>
+        <ul class="shortlink-list">
+        <% links.map(({shortcode,url,id}) =>{ %>
+         <% const truncate= url.length >= 30 ? `${url.slice(0,30)}...`: url %>
+            <li class="shortlink-item">
+              <div class="shortlink-content">
+                <span class="shortlink-label">Short link</span>
+                <a href="/<%= shortcode %>" target="_blank" class="shortlink-primary">
+                  <%= host %>/<%= shortcode%>
+                </a>
+                <span class="shortlink-label">Destination URL</span>
+                <span class="shortlink-url" title="<%= url %>"><%=truncate%></span>
+              </div>
+              <a href="/edit/<%=id%>"  class="edit-link" aria-label="Edit shortcode <%= shortcode %>" title="Edit shortcode">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm17.71-10.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.96 1.96 3.75 3.75 2.13-1.79Z"/>
+                </svg>
+              </a>
+              
+               <form action="/delete/<%=id%>"  method="post"  >
+                    <button class="delete-link">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 7h12l-1 14H7L6 7Zm3-3h6l1 2H8l1-2Zm1 5v9h2V9h-2Zm4 0v9h2V9h-2Z"/>
+                     </svg>
+                     </button>
+                    </form>
+             
+
+        </li>
+    <% }) %>
+    
+
+        </ul>
+    </div>
+   
+    </main>
+</body>
+</html> 

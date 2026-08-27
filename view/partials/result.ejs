@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+     
+    <%- include("header")%>
+     
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 92vh;">
+      <div class="container">
+        <h1>URL SHORTNER </h1>
+        <form id="shorten-form" action="/" method="POST">
+        <div>
+            <label for="url">ENTER URL : </label>
+            <input type="url" id="url" placeholder="Enter url" name="url" required>
+        </div>
+
+        <div>
+            <label for="short">SHORT URL : </label>
+            <input type="url" id="short" placeholder="short url" name="shortcode" required>
+        </div>
+        
+        <div>
+            <button type="submit" id="submit">Submit</button>
+        </div>
+        </form>
+        <h2>Shorten URL</h2>
+        <ul >
+            <li>name  : <%= student.name %></li>
+            <li>age  : <%= student.age %></li>
+            <li>class  : <%= student.age %></li>
+        </ul>
+    </div>
+   
+    </div>
+</body>
+</html> 

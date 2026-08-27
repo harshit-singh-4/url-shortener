@@ -1,0 +1,45 @@
+<style>
+  .flash-wrapper {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .flash-message {
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .flash-message.error {
+    background-color: #fde8e8;
+    color: #b42318;
+    border: 1px solid #f5c2c7;
+  }
+
+  .flash-message.success {
+    background-color: #e8f7ee;
+    color: #1d6f42;
+    border: 1px solid #b7e4c7;
+  }
+</style>
+
+ <!-- messages.error return true because it is array if empty
+  still return true so check  messages.error.length needed -->
+
+<% if ((messages.error && messages.error.length) || (messages.success && messages.success.length)) { %>
+  <div class="flash-wrapper">
+    <% if (messages.error && messages.error.length) { %>
+      <% messages.error.forEach((message) => { %>
+        <p class="flash-message error"><%= message %></p>
+      <% }) %>
+    <% } %>
+
+    <% if (messages.success && messages.success.length) { %>
+      <% messages.success.forEach((message) => { %>
+        <p class="flash-message success"><%= message %></p>
+      <% }) %>
+    <% } %>
+  </div>
+<% } %>

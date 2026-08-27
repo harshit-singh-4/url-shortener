@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Header</title>
+  <style>
+    body {
+      margin: 0;
+      
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      background-color: #222;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+
+    .nav-links a:hover {
+      color: #00adb5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">URL Shortener 🔗</div>
+
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/result">Result</a>
+      <a href="about">About</a>
+      <% if(!user){ %>
+      <a href="/register">Register</a>
+      <a href="/login">Login</a>
+      <% } else{ %>
+        <a href="profile">Profile</a>
+        <a href="/logout">Logout</a>
+        <% } %>
+    </div>
+  </div>
+
+</body>
+</html>

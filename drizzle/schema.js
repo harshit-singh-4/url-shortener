@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { int, mysqlTable, timestamp, varchar,boolean } from 'drizzle-orm/mysql-core';
-
+import { sql } from "drizzle-orm";
 // Foreign key always "many side" me hoti hai jese 
 // ki yha links  ek user ke many links
 
@@ -26,6 +26,14 @@ export const sessionstable = mysqlTable('sessions',{
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()).notNull()
 
+});
+
+export const verifyEmailTokensTable= mysqlTable('email_verification_tokens',{
+  id: int().autoincrement().primaryKey(),
+  userId: int().notNull().references(()=>users.id,{onDelete:"cascade"}),
+  token: varchar({length:8}).notNull(),
+  expiresAt: timestamp("expires_at").default(sql`(CURRENT_TIMESTAMP + INTERVAL 1 DAY)`),
+  createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
 export const users = mysqlTable('users', {

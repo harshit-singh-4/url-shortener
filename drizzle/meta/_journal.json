@@ -15,6 +15,20 @@
       "when": 1787422480640,
       "tag": "0001_keen_lily_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1788384430256,
+      "tag": "0002_early_sugar_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1788384689052,
+      "tag": "0003_colorful_warhawk",
+      "breakpoints": true
     }
   ]
 }

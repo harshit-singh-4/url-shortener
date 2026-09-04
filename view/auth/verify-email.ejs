@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Verify Email</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .container {
+      width: 420px;
+      padding: 40px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f0f0;
+      border-radius: 50%;
+      font-size: 28px;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: 26px;
+    }
+
+    .description {
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .email {
+      margin-bottom: 25px;
+      font-weight: 600;
+      color: #111;
+      word-break: break-word;
+    }
+
+    .code-input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 22px;
+      text-align: center;
+      letter-spacing: 6px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    .code-input:focus {
+      border-color: #111;
+    }
+
+    .verify-btn {
+      width: 100%;
+      padding: 13px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .verify-btn:hover {
+      background: #333;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 25px 0;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+
+    .verify-link {
+      display: inline-block;
+      color: #111;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 15px;
+    }
+
+    .verify-link:hover {
+      text-decoration: underline;
+    }
+
+    .resend {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .resend button {
+      border: none;
+      background: none;
+      color: #111;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .resend button:hover {
+      text-decoration: underline;
+    }
+
+    .expiry {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #999;
+    }
+  </style>
+</head>
+
+<body>
+    
+
+  <div class="container">
+
+    <div class="icon">
+      ✉
+    </div>
+
+    <h1>Verify Your Email</h1>
+
+    <p class="description">
+      We've sent a verification code and a verification link to:
+    </p>
+
+    <p class="email">
+      <%= email %>
+    </p>
+
+    <!-- Verification Code -->
+    <form action="/resend-verification-link" method="POST">
+
+      <input
+        type="text"
+        name="code"
+        class="code-input"
+        placeholder="00000000"
+        maxlength="8"
+        minlength="8"
+        pattern="[0-9]{8}"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        required
+      >
+
+      <button type="submit" class="verify-btn">
+        Verify Email
+      </button>
+
+    </form>
+
+    <div class="divider">
+      OR
+    </div>
+
+    <!-- Verification Link -->
+    <!-- <a href="#" class="verify-link">
+      Verify using the link sent to your email
+    </a> -->
+
+    <p class="resend">
+      Didn't receive the email?
+     <a href="/resend-verification-link"> <button type="button">
+        Resend verification email
+      </button> </a>
+    </p>
+
+    <p class="expiry">
+      Verification code expires in 30 minutes.
+    </p>
+
+  </div>
+
+</body>
+</html>
+
+
+

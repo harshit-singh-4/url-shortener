@@ -23,7 +23,7 @@ router.route("/update/:id")
 
 // ejs ex
 // ye exercise hain not related to this project
-router.get("/result",(req,res)=>{
+router.get("/about",(req,res)=>{
     const student={
         name:"harshit singh",
         class:12,

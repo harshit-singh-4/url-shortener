@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getregisterpage,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
+import {getregisterpage,getVerifyEmailPage,resendverificationlink,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
 
 const router= Router();
 
@@ -17,6 +17,10 @@ router.route("/me")
 .get(getme);
 
 router.get("/profile",getProfilePage);
+
+router.get("/verify-email",getVerifyEmailPage);
+
+router.post("/resend-verification-link",resendverificationlink)
 
 router.get("/logout",logoutuser)
 

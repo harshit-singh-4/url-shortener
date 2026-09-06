@@ -1,4 +1,4 @@
-import {getuserbyemail,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
+import {getuserbyemail,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
 import {registeruserschema,loginuserschema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
 
@@ -173,3 +173,28 @@ export const getProfilePage = async(req,res)=>{
     });
    
 }
+
+export const getVerifyEmailPage = async (req, res) => {
+    if (!req.user || req.user.isEmailValid) {
+        return res.redirect("/");
+    }
+
+    res.render("auth/verify-email", {
+        email: req.user.email
+    });
+
+};
+
+export const resendverificationlink=async(req,res)=>{
+    if(!req.user || req.user.isEmailValid){
+        res.redirect("/");
+    }
+
+    const randomToken=generateRandomToken();
+    await insertVerifyEmailToken({userId:req.user.id, token:randomToken});
+
+    const verifyEmailLink= await createVerifyEmailLink({ 
+        email:req.user.email,
+        token:randomToken
+        });
+    }

@@ -1,7 +1,8 @@
-import { count,eq } from "drizzle-orm";
+import { count,eq,lt,sql } from "drizzle-orm";
 import {db} from "../config/db.js"
 import {users,sessionstable, short_links} from "../drizzle/schema.js"
 import argon2 from "argon2";
+import crypto from "crypto";
 import jwt from "jsonwebtoken"
 import session from "express-session";
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
@@ -127,3 +128,31 @@ export const refreshTokens= async (refreshToken)=>{
 export const clearUserSession=async (sessionid)=>{
    return await db.delete(sessionstable).where(eq(sessionstable.id,sessionid));
 }
+
+export const generateRandomToken =async (digit = 8) => {
+    const min = 10 ** (digit - 1);
+    const max = 10 ** digit;
+
+    return crypto.randomInt(min, max).toString();
+};
+
+export const insertVerifyEmailToken = async ({ userId, token }) => {
+    
+    await db.delete(verifyEmailTokensTable)
+        .where(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`));
+    
+    await db.delete(verifyEmailTokensTable)
+        .where(eq(verifyEmailTokensTable.userId, userId));
+
+    return await db.insert(verifyEmailTokensTable)
+        .values({
+            userId,
+            token
+        });
+};
+
+export const createVerifyEmailLink =async ({ email, token }) => {
+    const uriEncodedEmail = encodeURIComponent(email);
+
+    return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+};

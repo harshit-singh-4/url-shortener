@@ -1,6 +1,6 @@
 import { count,eq,lt,sql } from "drizzle-orm";
 import {db} from "../config/db.js"
-import {users,sessionstable, short_links} from "../drizzle/schema.js"
+import {users,sessionstable,verifyEmailTokensTable, short_links} from "../drizzle/schema.js"
 import argon2 from "argon2";
 import crypto from "crypto";
 import jwt from "jsonwebtoken"
@@ -154,5 +154,5 @@ export const insertVerifyEmailToken = async ({ userId, token }) => {
 export const createVerifyEmailLink =async ({ email, token }) => {
     const uriEncodedEmail = encodeURIComponent(email);
 
-    return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+    return `${process.env.FRONTEND_URL}verify-email-token?token=${token}&email=${uriEncodedEmail}`;
 };

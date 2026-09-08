@@ -198,5 +198,14 @@ export const resendverificationlink=async(req,res)=>{
         email:req.user.email,
         token:randomToken
         });
-    return res.redirect(verifyEmailLink);
+
+        sendEmail({
+            to: req.user.email,
+            subject:"verify your email",
+            html: `
+            <h1>click the link below</h1>
+            <p>use the token : <code> ${randomToken}</code></p>
+            <a href="${verifyEmailLink}">verify email</a>`
+        })
+    return res.redirect("/verify-email");
 }

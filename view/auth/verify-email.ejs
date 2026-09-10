@@ -238,14 +238,13 @@
 
     <!-- Verification Code -->
     <form
-        action="/verify-email"
-        method="POST"
+        action="/verify-email-token"
         class="verify-form"
     >
 
         <input
             type="text"
-            name="code"
+            name="token"
             class="code-input"
             placeholder="00000000"
             maxlength="8"
@@ -255,6 +254,12 @@
             autocomplete="one-time-code"
             required
         >
+
+        <input
+        type="hidden"
+        name="email"
+        value="<%= email %>"
+         >
 
         <button
             type="submit"

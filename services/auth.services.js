@@ -1,4 +1,4 @@
-import { count,eq,lt,sql } from "drizzle-orm";
+import { count,eq,gte,and,lt,sql } from "drizzle-orm";
 import {db} from "../config/db.js"
 import {users,sessionstable,verifyEmailTokensTable, short_links} from "../drizzle/schema.js"
 import argon2 from "argon2";
@@ -6,6 +6,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken"
 import session from "express-session";
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
+import { url } from "inspector";
 
 export const getuserbyemail = async(email)=>{
     const data=  await db.select().from(users).where(eq(users.email,email))
@@ -129,7 +130,7 @@ export const clearUserSession=async (sessionid)=>{
    return await db.delete(sessionstable).where(eq(sessionstable.id,sessionid));
 }
 
-export const generateRandomToken =async (digit = 8) => {
+export const generateRandomToken = (digit = 8) => {
     const min = 10 ** (digit - 1);
     const max = 10 ** digit;
 
@@ -137,22 +138,63 @@ export const generateRandomToken =async (digit = 8) => {
 };
 
 export const insertVerifyEmailToken = async ({ userId, token }) => {
-    
-    await db.delete(verifyEmailTokensTable)
+    try{
+    return await db.transaction(async (tx)=>{
+
+    await tx.delete(verifyEmailTokensTable)
         .where(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`));
     
-    await db.delete(verifyEmailTokensTable)
+    await tx.delete(verifyEmailTokensTable)
         .where(eq(verifyEmailTokensTable.userId, userId));
 
-    return await db.insert(verifyEmailTokensTable)
+     await tx.insert(verifyEmailTokensTable)
         .values({
             userId,
             token
         });
+    });
+    }
+    catch(err){
+        console.log("verification token failed",err);
+        throw err;
+    }
 };
 
 export const createVerifyEmailLink =async ({ email, token }) => {
-    const uriEncodedEmail = encodeURIComponent(email);
+    // const uriEncodedEmail = encodeURIComponent(email);
 
-    return `${process.env.FRONTEND_URL}verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+    // return `${process.env.FRONTEND_URL}verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+    
+    const url=new URL(`${process.env.FRONTEND_URL}verify-email-token`);
+    url.searchParams.set("email",email);
+    url.searchParams.set("token",token);
+    return url.toString();
+};
+
+export const findVerificationEmailToken=async({token,email})=>{
+       
+    const tokenData=await db.select().from(verifyEmailTokensTable)
+    .where(and(
+        eq(verifyEmailTokensTable.token,token),
+        gte(verifyEmailTokensTable.expiresAt,sql`CURRENT_TIMESTAMP`)));
+    
+    if (tokenData.length === 0) {
+    return null;
+    }
+
+
+    return await db.select().from(users).where(eq(users.id,tokenData[0].userId));
+
+
+}
+
+export const verifyUserEmailAndUpdate=async(email)=>{
+    
+    return await db.update(users).set({isEmailValid:true}).where(eq(users.email,email));
+}
+
+export const deleteVerificationEmailToken = async (token) => {
+    return await db
+        .delete(verifyEmailTokensTable)
+        .where(eq(verifyEmailTokensTable.token, token));
 };

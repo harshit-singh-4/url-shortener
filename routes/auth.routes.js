@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getregisterpage,getVerifyEmailPage,resendverificationlink,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
+import {getregisterpage,verifyEmailToken,getVerifyEmailPage,resendverificationlink,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
 
 const router= Router();
 
@@ -21,6 +21,8 @@ router.get("/profile",getProfilePage);
 router.get("/verify-email",getVerifyEmailPage);
 
 router.post("/resend-verification-link",resendverificationlink)
+
+router.get("/verify-email-token",verifyEmailToken);
 
 router.get("/logout",logoutuser)
 

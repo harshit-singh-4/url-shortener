@@ -1,6 +1,7 @@
-import {getuserbyemail,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
-import {registeruserschema,loginuserschema} from "../validators/auth-validators.js"
+import {deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
+import {registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
+import { sendEmail } from "../lib/nodemailer.js";
 
 export const getregisterpage = (req,res)=>{
     
@@ -190,7 +191,7 @@ export const resendverificationlink=async(req,res)=>{
         res.redirect("/");
     }
 
-    const randomToken= await generateRandomToken();
+    const randomToken=  generateRandomToken();
 
     await insertVerifyEmailToken({userId:req.user.id, token:randomToken});
 
@@ -209,3 +210,23 @@ export const resendverificationlink=async(req,res)=>{
         })
     return res.redirect("/verify-email");
 }
+
+export const verifyEmailToken=(async(req,res)=>{
+     
+    const result=verifyEmailSchema.safeParse(req.query);
+
+    if(!result.success){
+        return res.status(400).send("verification link is invalid");
+    }
+    
+    const {token,email}=result.data;
+
+    const data=await findVerificationEmailToken(result.data);
+
+    if(!data){
+         return res.status(400).send("Invalid or expired verification link");
+    }
+    await verifyUserEmailAndUpdate(data[0].email);
+    await deleteVerificationEmailToken(token);
+    return res.redirect("/profile");
+})

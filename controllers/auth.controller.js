@@ -64,7 +64,7 @@ export const postlogin= async(req,res)=>{
     const accessToken = createAccessToken({
       id:user.id,
       name:user.name,
-      isEmailValid:false,
+    //   isEmailValid:false,
       email:user.email,
       sessionid: session.id,
       
@@ -127,10 +127,49 @@ export const postregister = async (req,res)=>{
           
           const hashp= await hashpassword(password);
 
-          await createuser({Name,email,password:hashp});
+          const [userId] = await createuser({Name,email,password:hashp});
+          const user = await findUserById(userId.id);
+        // access and refresh token 
 
-          req.flash("success","Account created successfully. Please log in.");
-          return res.redirect("/login");
+          
+          const [session] = await createsession(userId.id,{
+                            ip: req.clientip
+                            })
+
+          const accessToken = createAccessToken({
+            id:user.id,
+            name:user.name,
+            // isEmailValid:false,
+            email:user.email,
+            sessionid: session.id,
+            
+             })
+          
+      
+          const refreshToken = createRefreshToken(session.id);
+          
+//           ...baseConfig kya hota hai?
+      
+//       🔥 Ye object ke saare properties ko copy/spread kar deta hai doosre object me
+      
+          const baseConfig = {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax"
+          }
+      
+          res.cookie("access_token",accessToken,{
+              ...baseConfig,
+              maxAge: ACCESS_TOKEN_EXPIRY*1000 // cookie take in millisec
+          })
+          res.cookie("refresh_token",refreshToken,{
+              ...baseConfig,
+              maxAge:REFRESH_TOKEN_EXPIRY*1000
+          })
+          
+
+        //   req.flash("success","Account created successfully. Please log in.");
+          return res.redirect("/verify-email");
 }
 
 export const getme=(req,res)=>{
@@ -154,7 +193,7 @@ export const logoutuser=async (req,res)=>{
 export const getProfilePage = async(req,res)=>{
       const user = await findUserById(req.user.id);
       if(!user){
-        return redirect("/login");
+        return res.redirect("/login");
       }
     //   console.log(user)
     const [userShortLinks]= await getAllShortLinks(req.user.id);
@@ -176,32 +215,40 @@ export const getProfilePage = async(req,res)=>{
 }
 
 export const getVerifyEmailPage = async (req, res) => {
-    if (!req.user || req.user.isEmailValid) {
+    // console.log(req.user);
+     if (!req.user) {
+        return res.redirect("/");
+    }
+    const user = await findUserById(req.user.id);
+    if (!user || user.isEmailValid) {
         return res.redirect("/");
     }
 
     return res.render("auth/verify-email", {
-        email: req.user.email
+        email: user.email
     });
 
 };
 
 export const resendverificationlink=async(req,res)=>{
-    if(!req.user || req.user.isEmailValid){
-        res.redirect("/");
+    if (!req.user) {
+        return res.redirect("/");
     }
-
+    const user = await findUserById(req.user.id);
+    if (!user || user.isEmailValid) {
+        return res.redirect("/");
+    }
     const randomToken=  generateRandomToken();
 
     await insertVerifyEmailToken({userId:req.user.id, token:randomToken});
 
     const verifyEmailLink= await createVerifyEmailLink({ 
-        email:req.user.email,
+        email:user.email,
         token:randomToken
         });
 
-        sendEmail({
-            to: req.user.email,
+        await sendEmail({
+            to: user.email,
             subject:"verify your email",
             html: `
             <h1>click the link below</h1>

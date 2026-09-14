@@ -20,8 +20,8 @@ export const createuser = async({Name,email,password})=>{
             name:Name,
             email:email,
             password:password
-        }
-    )
+        })
+        .$returningId();
 }
 
 export const createsession = async (id,{ip})=>{

@@ -2,6 +2,10 @@ import {deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,fin
 import {registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
 import { sendEmail } from "../lib/nodemailer.js";
+import  path from "path"
+import fs from "fs/promises"
+import mjml2html from "mjml";
+import ejs from "ejs";
 
 export const getregisterpage = (req,res)=>{
     
@@ -230,6 +234,8 @@ export const getVerifyEmailPage = async (req, res) => {
 
 };
 
+ 
+
 export const resendverificationlink=async(req,res)=>{
     if (!req.user) {
         return res.redirect("/");
@@ -246,14 +252,32 @@ export const resendverificationlink=async(req,res)=>{
         email:user.email,
         token:randomToken
         });
+     
+         // 1: to get the file data
+  const mjmlTemplate = await fs.readFile(
+    path.join(import.meta.dirname, "..", "emails", "verify-email.mjml"),
+    "utf-8"
+  );
+
+  // to replace the placeholders with the actual values
+  const filledTemplate = ejs.render(mjmlTemplate, {
+    code: randomToken,
+    link: verifyEmailLink,
+  });
+
+  // to convert mjml to html
+  const mjmlResult = await mjml2html(filledTemplate);
+
+   const htmlOutput = mjmlResult.html;
 
         await sendEmail({
             to: user.email,
             subject:"verify your email",
-            html: `
-            <h1>click the link below</h1>
-            <p>use the token : <code> ${randomToken}</code></p>
-            <a href="${verifyEmailLink}">verify email</a>`
+            html:htmlOutput
+            // html: `
+            // <h1>click the link below</h1>
+            // <p>use the token : <code> ${randomToken}</code></p>
+            // <a href="${verifyEmailLink}">verify email</a>`
         })
     return res.redirect("/verify-email");
 }

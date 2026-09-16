@@ -1,0 +1,167 @@
+
+<mjml>
+  <mj-head>
+    <mj-title>Verify Your Email</mj-title>
+
+    <mj-font
+      name="Roboto"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
+    />
+
+    <mj-attributes>
+      <mj-all font-family="Roboto, Arial, sans-serif" />
+      <mj-text color="#4b5563" />
+    </mj-attributes>
+
+    <mj-style>
+      .token-container {
+        background-color: #f5f7fa;
+        border-radius: 8px;
+        font-family: monospace;
+        letter-spacing: 5px;
+      }
+
+      .verification-button {
+        border-radius: 6px;
+      }
+
+      .footer-text {
+        color: #98a2b3;
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f5f7fa">
+
+    <!-- Main Container -->
+    <mj-section
+      background-color="#ffffff"
+      padding="40px 25px"
+    >
+      <mj-column>
+
+        <!-- Heading -->
+        <mj-text
+          font-size="26px"
+          font-weight="700"
+          color="#111827"
+          align="center"
+          padding-bottom="20px"
+        >
+          Verify Your Email
+        </mj-text>
+
+        <!-- Message -->
+        <mj-text
+          font-size="16px"
+          line-height="24px"
+          padding-bottom="10px"
+        >
+          Thanks for creating an account with our URL Shortener.
+        </mj-text>
+
+        <mj-text
+          font-size="16px"
+          line-height="24px"
+          padding-bottom="20px"
+        >
+          Please verify your email address using the verification code below.
+        </mj-text>
+
+        <!-- Verification Code -->
+        <mj-text
+          css-class="token-container"
+          font-size="28px"
+          font-weight="700"
+          color="#111827"
+          align="center"
+          padding="20px"
+        >
+          <%= code %>
+        </mj-text>
+
+        <mj-spacer height="20px" />
+
+        <!-- Alternative Verification -->
+        <mj-text
+          font-size="16px"
+          line-height="24px"
+          padding-bottom="20px"
+        >
+          You can also verify your email directly by clicking the button below.
+        </mj-text>
+
+        <!-- Verification Button -->
+        <mj-button
+          background-color="#0070f3"
+          color="#ffffff"
+          font-size="16px"
+          font-weight="500"
+          border-radius="6px"
+          inner-padding="14px 25px"
+          href="<%= link %>"
+        >
+          Verify My Email
+        </mj-button>
+
+        <mj-spacer height="25px" />
+
+        <!-- Security Message -->
+        <mj-text
+          font-size="14px"
+          line-height="21px"
+          color="#6b7280"
+        >
+          If you did not create an account with us, you can safely ignore this
+          email.
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer Divider -->
+    <mj-section
+      background-color="#ffffff"
+      padding="0 25px"
+    >
+      <mj-column>
+        <mj-divider
+          border-width="1px"
+          border-color="#e5e7eb"
+          padding="10px 0"
+        />
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+    <mj-section
+      background-color="#ffffff"
+      padding="10px 25px 30px"
+    >
+      <mj-column>
+
+        <mj-text
+          css-class="footer-text"
+          font-size="13px"
+          line-height="20px"
+          align="center"
+        >
+          URL Shortener
+        </mj-text>
+
+        <mj-text
+          css-class="footer-text"
+          font-size="13px"
+          line-height="20px"
+          align="center"
+          padding-top="5px"
+        >
+          This is an automated email. Please do not reply.
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
+

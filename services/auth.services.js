@@ -198,3 +198,12 @@ export const deleteVerificationEmailToken = async (token) => {
         .delete(verifyEmailTokensTable)
         .where(eq(verifyEmailTokensTable.token, token));
 };
+
+export const updateUserName = async (userId, name) => {
+    return await db
+        .update(users)
+        .set({
+            name
+        })
+        .where(eq(users.id, userId));
+};

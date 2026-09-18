@@ -1,4 +1,4 @@
-import {deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
+import {updateUserName,deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
 import {registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
 import { sendEmail } from "../lib/nodemailer.js";
@@ -301,3 +301,38 @@ export const verifyEmailToken=(async(req,res)=>{
     await deleteVerificationEmailToken(token);
     return res.redirect("/profile");
 })
+
+// edit profile
+
+export const getEditProfilePage = async (req, res) => {
+    if (!req.user) {
+        return res.redirect("/login");
+    }
+
+    const user = await findUserById(req.user.id);
+
+    if (!user) {
+        return res.redirect("/login");
+    }
+
+    return res.render("auth/edit-profile", {
+        user
+    });
+};
+
+// update profile
+
+export const updateProfile = async (req, res) => {
+
+    if (!req.user) {
+        return res.redirect("/login");
+    }
+
+    const { name } = req.body;
+
+    await updateUserName(req.user.id, name);
+
+    req.flash("success", "Profile updated successfully.");
+
+    return res.redirect("/profile");
+};

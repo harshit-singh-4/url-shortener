@@ -1,5 +1,5 @@
-import {updateUserName,deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
-import {registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
+import {updateUserPassword,updateUserName,deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
+import {verifyPasswordSchema,registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
 import { sendEmail } from "../lib/nodemailer.js";
 import  path from "path"
@@ -336,3 +336,41 @@ export const updateProfile = async (req, res) => {
 
     return res.redirect("/profile");
 };
+
+// pass update
+
+export const changePassword=async(req,res)=>{
+     
+   const result=verifyPasswordSchema.safeParse(req.body);
+    
+   if (!result.success) {
+    // .errors ki jagah .issues likhna hai
+    const firstError = result.error?.issues?.[0]?.message || "Validation failed";
+
+    req.flash("error",firstError);
+    return res.redirect("/profile");
+    //  return res.status(400).json({
+    //         success: false,
+    //         message: firstError
+    //     });
+}
+
+const {currentPassword,newPassword}=req.body;
+ 
+const user = await findUserById(req.user.id);
+if (!user) {
+    req.flash("error", "User not found");
+    return res.redirect("/login");
+}
+ const isPasswordValid=await compare(user.password,currentPassword);
+   
+ if(!isPasswordValid){
+    req.flash("error","password incorrect");
+    return res.redirect("/profile");
+ }
+ 
+
+ await updateUserPassword(user.id,newPassword);
+ req.flash("success","password updated")
+return res.redirect("/profile")
+}

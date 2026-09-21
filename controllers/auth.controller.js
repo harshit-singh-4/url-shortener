@@ -374,3 +374,8 @@ if (!user) {
  req.flash("success","password updated")
 return res.redirect("/profile")
 }
+
+export const getResetPasswordPage=async(req,res)=>{
+    
+    return res.render("./auth/forgot-password");
+}

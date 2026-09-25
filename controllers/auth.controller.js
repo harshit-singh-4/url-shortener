@@ -1,7 +1,8 @@
-import {updateUserPassword,updateUserName,deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
-import {verifyPasswordSchema,registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
+import {getResetPasswordToken,createResetPasswordLink,updateUserPassword,updateUserName,deleteVerificationEmailToken,verifyUserEmailAndUpdate,getuserbyemail,findVerificationEmailToken,insertVerifyEmailToken,createVerifyEmailLink,generateRandomToken,getAllShortLinks,findUserById,createuser,hashpassword,compare,generatetoken,createsession,createRefreshToken,createAccessToken,clearUserSession} from "../services/auth.services.js"
+import {emailSchema,verifyPasswordSchema,registeruserschema,loginuserschema,verifyEmailSchema} from "../validators/auth-validators.js"
 import { REFRESH_TOKEN_EXPIRY, ACCESS_TOKEN_EXPIRY } from "../config/constant.js";
 import { sendEmail } from "../lib/nodemailer.js";
+import {getHtmlFromMjmlTemplate} from "../lib/get-html-from-mjml-template.js"
 import  path from "path"
 import fs from "fs/promises"
 import mjml2html from "mjml";
@@ -378,4 +379,52 @@ return res.redirect("/profile")
 export const getResetPasswordPage=async(req,res)=>{
     
     return res.render("./auth/forgot-password");
+}
+
+export const postForgotPassword=async(req,res)=>{
+    const result=emailSchema.safeParse(req.body);
+
+    if(!result.success){
+            const firstError = result.error?.issues?.[0]?.message || "Validation failed";
+
+            req.flash("error",firstError);
+            return res.redirect("/reset-password");
+    }
+    const data= await getuserbyemail(req.body.email);
+    
+    if(!data.length){
+         req.flash("error","Please enter a valid email address.");
+        return res.redirect("/reset-password");
+    }
+
+    const resetPasswordLink=await createResetPasswordLink({userId:data[0].id});
+    
+    const html = await getHtmlFromMjmlTemplate("reset-password-email", {
+      name: data[0].name,
+      link: resetPasswordLink,
+    });
+
+
+   await sendEmail({
+      to: data[0].email,
+      subject: "Reset Your Password",
+      html,
+    });
+
+
+  req.flash("success", "email is sent to you gmail");
+  return res.redirect("/reset-password");
+}
+
+
+export const getResetPasswordTokenPage=async(req,res)=>{
+    const token=req.params.token;
+    const passwordResetData = await getResetPasswordToken(token);
+  if (!passwordResetData){
+    return res.render("auth/wrong-reset-password-token");
+  }
+
+  return res.render("auth/reset-password", {
+    token,
+  });
 }

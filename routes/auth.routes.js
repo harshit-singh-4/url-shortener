@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getResetPasswordPage,changePassword,getregisterpage,updateProfile,getEditProfilePage,verifyEmailToken,getVerifyEmailPage,resendverificationlink,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
+import {getResetPasswordTokenPage,postForgotPassword,getResetPasswordPage,changePassword,getregisterpage,updateProfile,getEditProfilePage,verifyEmailToken,getVerifyEmailPage,resendverificationlink,getloginpage,postlogin,postregister,getme,logoutuser,getProfilePage} from "../controllers/auth.controller.js"
 
 const router= Router();
 
@@ -14,6 +14,10 @@ router.route("/login")
 .post(postlogin)
 
 router.get("/reset-password",getResetPasswordPage);
+
+router.post("/forgot-password",postForgotPassword);
+
+router.get("/reset-password/:token",getResetPasswordTokenPage);
 
 router.route("/me")
 .get(getme);

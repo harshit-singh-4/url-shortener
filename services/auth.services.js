@@ -1,6 +1,6 @@
 import { count,eq,gte,and,lt,sql } from "drizzle-orm";
 import {db} from "../config/db.js"
-import {users,sessionstable,verifyEmailTokensTable, short_links} from "../drizzle/schema.js"
+import {passwordResetTokenTable,users,sessionstable,verifyEmailTokensTable, short_links} from "../drizzle/schema.js"
 import argon2 from "argon2";
 import crypto from "crypto";
 import jwt from "jsonwebtoken"
@@ -10,7 +10,7 @@ import { url } from "inspector";
 
 export const getuserbyemail = async(email)=>{
     const data=  await db.select().from(users).where(eq(users.email,email))
-    console.log(data);
+    // console.log(data);
     return data;
  }
 
@@ -214,3 +214,37 @@ export const updateUserPassword= async (userId,newPassword)=>{
         {password:hashpass}
     ).where(eq(users.id,userId));
 }
+
+export const createResetPasswordLink = async ({ userId }) => {
+  const randomToken = crypto.randomBytes(32).toString("hex");
+
+  const tokenHash = crypto
+    .createHash("sha256")
+    .update(randomToken)
+    .digest("hex");
+
+  await db
+    .delete(passwordResetTokenTable)
+    .where(eq(passwordResetTokenTable.userId, userId));
+
+  await db.insert(passwordResetTokenTable).values({ userId, tokenHash });
+
+  return `${process.env.FRONTEND_URL}reset-password/${randomToken}`;
+};
+
+// /getResetPasswordToken
+export const getResetPasswordToken = async (token) => {
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  const [data] = await db
+    .select()
+    .from(passwordResetTokenTable)
+    .where(
+      and(
+        eq(passwordResetTokenTable.tokenHash, tokenHash),
+        gte(passwordResetTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`)
+      )
+    );
+
+  return data;
+};

@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { int, mysqlTable, timestamp, varchar,boolean } from 'drizzle-orm/mysql-core';
 import { sql } from "drizzle-orm";
+import { text } from 'drizzle-orm/gel-core';
 // Foreign key always "many side" me hoti hai jese 
 // ki yha links  ek user ke many links
 
@@ -34,6 +35,16 @@ export const verifyEmailTokensTable= mysqlTable('email_verification_tokens',{
   token: varchar({length:8}).notNull(),
   expiresAt: timestamp("expires_at").default(sql`(CURRENT_TIMESTAMP + INTERVAL 1 DAY)`),
   createdAt: timestamp("created_at").defaultNow().notNull()
+});
+
+export const passwordResetTokenTable = mysqlTable('password_reset_token',{
+     id: int().primaryKey().autoincrement(),
+     userId: int().notNull().references(()=> users.id,{onDelete:"cascade"})
+     .unique(),
+     tokenHash: text().notNull(),
+     expiresAt: timestamp("expires_at").default(sql`(CURRENT_TIMESTAMP + INTERVAL 1 HOUR)`).notNull(),
+     createdAt: timestamp("created_at").defaultNow().notNull()
+
 });
 
 export const users = mysqlTable('users', {

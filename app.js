@@ -24,6 +24,7 @@ const isProduction = process.env.NODE_ENV === "production";
 // middleware
 
      app.use(express.static(path.join(__dirname,"public")));
+     app.use(express.json());
      app.use(express.urlencoded({extended:true})); 
      
      // ejs
